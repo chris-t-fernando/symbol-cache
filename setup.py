@@ -8,5 +8,5 @@ setup(
     author_email="chris.t.fernando@gmail.com",
     url="https://github.com/chris-t-fernando/symbol-cache",
     packages=["symbol"],
-    install_requires=["numpy", "logging", "pandas", "yfinance"],
+    install_requires=["numpy", "pandas", "yfinance"],
 )
