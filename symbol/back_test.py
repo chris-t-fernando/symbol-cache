@@ -1,16 +1,8 @@
-# TODO you need to solve for backtesting
-# i think if you make a new class that inherits from SymbolData
-# and overrides get_pause so the cache never invalidates
-# and add a method to set the 'current' date and time
-# and override the query methods, where you run super() then trim anything after the 'current' date and time
-# finally, the logic in Symbol will need to be updated to be aware of backtesting, and which object to use
-# of maybe inject it?
-
 from symbol.symbol_data import SymbolData
 import pandas as pd
 
 
-class BackTest(SymbolData):
+class BackTestData(SymbolData):
     def get_pause(interval: str) -> int:
         # causes the cache to never invalidate
         return 999999999
