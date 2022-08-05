@@ -49,12 +49,15 @@ class Symbol:
 
     def _align_quantity(quantity: float, increment: float, notional: bool) -> float:
         mod_quantity = quantity % increment
-        quantity = quantity - mod_quantity
+        aligned_quantity = quantity - mod_quantity
 
         if notional:
-            return Symbol._hacky_float(quantity, increment)
+            aligned_quantity = Symbol._hacky_float(aligned_quantity, increment)
         else:
-            return int(quantity)
+            aligned_quantity = int(aligned_quantity)
+
+        log.debug(f"Aligned quantity from {quantity} to {aligned_quantity} (increment {increment})")
+        return aligned_quantity
 
     def align_price(self, unit_price: float) -> float:
         dec_unit = Decimal(unit_price)
@@ -69,6 +72,9 @@ class Symbol:
                 f"Align {unit_price} using {self.min_price_increment} resulted in non-sensical result of {aligned_price}"
             )
 
+        log.debug(
+            f"Aligned price from {unit_price} to {aligned_price} (increment {self.min_price_increment})"
+        )
         return aligned_price
 
     def _hacky_float(value: Decimal, step_increment: float) -> float:
