@@ -1,7 +1,7 @@
-from symbol.back_test import BackTest
+from symbol.back_test import BackTestData
 import pandas as pd
 
-a = BackTest(yf_symbol="BTC-USD")
+a = BackTestData(yf_symbol="BTC-USD")
 a.set_period(pd.Timestamp("2022-07-07 12:34:00", tz="UTC"))
 b = a.get_first()
 c = a.get_range()
