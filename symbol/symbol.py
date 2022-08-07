@@ -11,6 +11,10 @@ class InvalidQuantity(Exception):
     ...
 
 
+class InvalidPrice(Exception):
+    ...
+
+
 class Symbol:
     def __init__(
         self,
