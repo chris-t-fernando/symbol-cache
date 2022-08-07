@@ -7,11 +7,14 @@ import logging
 log = logging.getLogger(__name__)
 
 
+class InvalidQuantity(Exception):
+    ...
+
+
 class Symbol:
     def __init__(
         self,
         yf_symbol: str,
-        alp_symbol: str,
         min_quantity_increment: float = 1,
         min_quantity: float = 1,
         min_price_increment: float = 0.001,
@@ -20,7 +23,6 @@ class Symbol:
         back_testing: bool = False,
     ) -> None:
         self.yf_symbol = yf_symbol
-        self.alp_symbol = alp_symbol
         self.min_quantity_increment = min_quantity_increment
         self.min_quantity = min_quantity
         self.min_price_increment = Decimal(min_price_increment)
@@ -36,9 +38,19 @@ class Symbol:
         return self.yf_symbol
 
     def align_quantity(self, initial_quantity: float) -> float:
-        return Symbol._align_quantity(
+
+        aligned_quantity = Symbol._align_quantity(
             quantity=initial_quantity, increment=self.min_quantity, notional=self.notional_units
         )
+
+        if aligned_quantity < self.min_quantity:
+            raise InvalidQuantity(
+                f"Specified quantity of {initial_quantity} (aligned to "
+                f"{aligned_quantity}) is less than minimum quantity for this symbol "
+                f"of {self.min_quantity}"
+            )
+
+        return aligned_quantity
 
     def align_quantity_increment(self, incremental_quantity: float):
         return Symbol._align_quantity(

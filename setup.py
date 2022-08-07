@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name="symbol_cache",
-    version="0.23",
+    version="0.24",
     description="Stock ohlc data caching",
     author="Chris Fernando",
     author_email="chris.t.fernando@gmail.com",
