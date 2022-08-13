@@ -3,6 +3,10 @@ import pandas as pd
 
 
 class BackTestData(SymbolData):
+    def __init__(self, yf_symbol: str, interval: str = "5m"):
+        super().__init__(yf_symbol, interval)
+        self._period = None
+
     def get_pause(interval: str) -> int:
         # causes the cache to never invalidate
         return 999999999
