@@ -3,6 +3,7 @@ from symbol.back_test import BackTestData
 from math import floor, log10
 from decimal import Decimal
 import logging
+from pandas import Timestamp
 
 log = logging.getLogger(__name__)
 
@@ -108,3 +109,11 @@ class Symbol:
         float_value = float(truncated_string)
 
         return float_value
+
+    @property
+    def period(self):
+        return self.ohlc.period
+
+    @period.setter
+    def period(self, period: Timestamp):
+        self.ohlc.period = period

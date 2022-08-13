@@ -7,8 +7,13 @@ class BackTestData(SymbolData):
         # causes the cache to never invalidate
         return 999999999
 
-    def set_period(self, period: pd.Timestamp):
-        self.period = period
+    @property
+    def period(self):
+        return self._period
+
+    @period.setter
+    def period(self, period: pd.Timestamp):
+        self._period = period
 
     def get_first(self):
         result = super().get_first()
