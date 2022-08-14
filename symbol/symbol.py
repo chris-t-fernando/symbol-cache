@@ -43,7 +43,6 @@ class Symbol:
         return self.yf_symbol
 
     def align_quantity(self, initial_quantity: float) -> float:
-
         aligned_quantity = Symbol._align_quantity(
             quantity=initial_quantity, increment=self.min_quantity, notional=self.notional_units
         )
@@ -58,11 +57,16 @@ class Symbol:
         return aligned_quantity
 
     def align_quantity_increment(self, incremental_quantity: float):
-        return Symbol._align_quantity(
+        aligned_quantity = Symbol._align_quantity(
             quantity=incremental_quantity,
             increment=self.min_quantity_increment,
             notional=self.notional_units,
         )
+
+        if aligned_quantity < self.min_quantity:
+            return self.min_quantity
+
+        return aligned_quantity
 
     def _align_quantity(quantity: float, increment: float, notional: bool) -> float:
         mod_quantity = quantity % increment
