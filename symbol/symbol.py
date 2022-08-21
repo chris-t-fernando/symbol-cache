@@ -26,6 +26,7 @@ class Symbol:
         notional_units: bool = False,
         interval: str = "5m",
         back_testing: bool = False,
+        time_manager=None,
     ) -> None:
         self.yf_symbol = yf_symbol
         self.min_quantity_increment = min_quantity_increment
@@ -35,7 +36,10 @@ class Symbol:
         self.interval = interval
 
         if back_testing:
-            self.ohlc = BackTestData(yf_symbol=yf_symbol, interval=interval)
+            self.ohlc = BackTestData(
+                yf_symbol=yf_symbol, interval=interval, time_manager=time_manager
+            )
+            time_manager.add_symbol(self)
         else:
             self.ohlc = SymbolData(yf_symbol=yf_symbol, interval=interval)
 
