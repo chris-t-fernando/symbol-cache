@@ -13,7 +13,7 @@ class BackTestData(SymbolData):
 
     def get_first(self):
         result = super().get_first()
-        if result.name > self._time_manager.first:
+        if result.name > self.period:
             return
 
         return result
