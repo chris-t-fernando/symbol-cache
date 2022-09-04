@@ -242,8 +242,15 @@ class SymbolData:
             # existing ta function, so just refresh what's changed
             # start by grabbing the new rows, plus a buffer of 100 previous rows
             # get the index 100 rows earlier
+            if not start:
+                # TODO this is bad and should be fixed
+                start_loc = len(self.source_bars.index) - 20
+            else:
+                start_loc = self.source_bars.index.get_loc(start)
 
-            start_loc = self.source_bars.index.get_loc(start)
+            if not end:
+                end = self.source_bars.index[-1]
+
             padding = 100
             if start_loc < padding:
                 padding_start = self.source_bars.index[0]
