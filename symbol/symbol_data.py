@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 import yfinance as yf
 import pytz
 import warnings
+from core.ita import ITA
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
@@ -230,12 +231,12 @@ class SymbolData:
             pause += 90
         return pause
 
-    def apply_ta(self, ta_function, start: pd.Timestamp = None, end: pd.Timestamp = None):
+    def apply_ta(self, ta_function:ITA, start: pd.Timestamp = None, end: pd.Timestamp = None):
         key_name = str(ta_function)
         # new ta function
         if not str(ta_function) in self.ta_data:
             # register this ta function - so it gets refreshed next time there is a cache miss
-            self.ta_data[key_name] = ta_function(self.source_bars).df
+            self.ta_data[key_name] = ta_function.do_ta(self.source_bars).df
             self.registered_ta_functions.add(ta_function)
 
         else:
@@ -263,7 +264,7 @@ class SymbolData:
                 (self.source_bars.index >= padding_start) & (self.source_bars.index <= end)
             ]
 
-            ta_data_output = ta_function(ta_data_input).df
+            ta_data_output = ta_function.do_ta(ta_data_input).df
 
             # NOT NEEDED - the xor gets rid of this
             # get rid of the padding

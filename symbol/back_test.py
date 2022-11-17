@@ -11,12 +11,11 @@ class BackTestData(SymbolData):
         # causes the cache to never invalidate
         return 999999999
 
-    def get_first(self):
-        result = super().get_first()
-        if result.name > self.period:
-            return
-
-        return result
+    #def get_first(self):
+    #    result = super().get_first()
+    #    if result.name > self.period:
+    #        return
+    #    return result
 
     @property
     def period(self):

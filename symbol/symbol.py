@@ -20,13 +20,12 @@ class Symbol:
     def __init__(
         self,
         yf_symbol: str,
+        time_manager=None,
         min_quantity_increment: float = 1,
         min_quantity: float = 1,
         min_price_increment: float = 0.001,
         notional_units: bool = False,
         interval: str = "5m",
-        back_testing: bool = False,
-        time_manager=None,
     ) -> None:
         self.yf_symbol = yf_symbol
         self.min_quantity_increment = min_quantity_increment
@@ -34,12 +33,15 @@ class Symbol:
         self.min_price_increment = Decimal(min_price_increment)
         self.notional_units = notional_units
         self.interval = interval
+        self.time_manager = time_manager
 
-        if back_testing:
+        if time_manager.back_test:
+
+        #if back_testing:
             self.ohlc = BackTestData(
                 yf_symbol=yf_symbol, interval=interval, time_manager=time_manager
             )
-            time_manager.add_symbol(self)
+            #time_manager.add_symbol(self)
         else:
             self.ohlc = SymbolData(yf_symbol=yf_symbol, interval=interval)
 
@@ -85,7 +87,7 @@ class Symbol:
         return aligned_quantity
 
     def align_price(self, unit_price: float) -> float:
-        dec_unit = Decimal(unit_price)
+        dec_unit = Decimal(round(unit_price,10))
         mod_unit = dec_unit % self.min_price_increment
         trimmed_unit = dec_unit - mod_unit
         aligned_price = Symbol._hacky_float(
