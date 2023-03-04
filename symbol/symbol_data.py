@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 import yfinance as yf
 import pytz
 import warnings
-from core.ita import ITA
+#from core.ita import ITA
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
