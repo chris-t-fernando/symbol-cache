@@ -231,7 +231,7 @@ class SymbolData:
             pause += 90
         return pause
 
-    def apply_ta(self, ta_function:ITA, start: pd.Timestamp = None, end: pd.Timestamp = None):
+    def apply_ta(self, ta_function, start: pd.Timestamp = None, end: pd.Timestamp = None):
         key_name = str(ta_function)
         # new ta function
         if not str(ta_function) in self.ta_data:
