@@ -26,7 +26,7 @@ class SymbolData:
     yf_symbol: str
     interval: str
     source_bars: pd.DataFrame
-    bars: pd.DataFrame
+    _bars: pd.DataFrame
     registered_ta_functions: set
     ta_data: dict
     interval_minutes: int
@@ -310,17 +310,26 @@ class SymbolData:
     def get_first(self):
         return self.bars.iloc[0]
 
-    @Decorators.refresh_bars
+    # @Decorators.refresh_bars
     def get_range(self, start: pd.Timestamp = None, end: pd.Timestamp = None):
         return self.bars.loc[start:end]
 
-    @Decorators.refresh_bars
+    # @Decorators.refresh_bars
     def get_latest(self):
         return self.bars.iloc[-1]
 
-    @Decorators.refresh_bars
+    # @Decorators.refresh_bars
     def in_bars(self, timestamp: pd.Timestamp):
         return timestamp in self.bars
+
+    @Decorators.refresh_bars
+    @property
+    def bars(self):
+        return self._bars
+
+    @bars.setter
+    def bars(self, new_bars):
+        self._bars = new_bars
 
 
 def round_time(date: pd.Timestamp, interval_minutes: int):
