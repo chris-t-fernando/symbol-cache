@@ -6,7 +6,8 @@ from dateutil.relativedelta import relativedelta
 import yfinance as yf
 import pytz
 import warnings
-#from core.ita import ITA
+
+# from core.ita import ITA
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
@@ -49,7 +50,9 @@ class SymbolData:
         self.interval = interval
         self.registered_ta_functions = set()
         self.ta_data = {}
-        self.interval_delta, self.max_range = SymbolData.get_interval_settings(self.interval)
+        self.interval_delta, self.max_range = SymbolData.get_interval_settings(
+            self.interval
+        )
         self.interval_minutes = int(interval[:-1])
         self.refresh_timeout = None
 
@@ -79,7 +82,9 @@ class SymbolData:
                 relativedelta(days=max_period[interval]),
             )
         else:
-            raise ValueError("I can't be bothered implementing intervals longer than 90m")
+            raise ValueError(
+                "I can't be bothered implementing intervals longer than 90m"
+            )
 
     def __repr__(self) -> str:
         return self.yf_symbol
@@ -96,7 +101,9 @@ class SymbolData:
 
     @staticmethod
     def merge_bars(bars, new_bars):
-        return pd.concat([bars, new_bars[~new_bars.index.isin(bars.index)]]).sort_index()
+        return pd.concat(
+            [bars, new_bars[~new_bars.index.isin(bars.index)]]
+        ).sort_index()
 
     def _make_now(self):
         local_tz = pytz.timezone("Australia/Melbourne")
@@ -113,7 +120,9 @@ class SymbolData:
         start_date = start_date.replace(microsecond=0)
         return start_date
 
-    def refresh_cache(self, start: pd.Timestamp = None, end: pd.Timestamp = None) -> None:
+    def refresh_cache(
+        self, start: pd.Timestamp = None, end: pd.Timestamp = None
+    ) -> None:
         cache_miss = False
         initialising = False
 
@@ -191,13 +200,17 @@ class SymbolData:
                     f"  - merged {old_rows:,} old bars with {len(new_bars):,} new bars, new length is {len(self.source_bars):,}"
                 )
                 if self.source_bars.index[0] != old_start:
-                    log.debug(f"  - new start is {self.source_bars.index[0]} vs old {old_start}")
+                    log.debug(
+                        f"  - new start is {self.source_bars.index[0]} vs old {old_start}"
+                    )
                 if self.source_bars.index[-1] != old_finish:
-                    log.debug(f"  - new finish is {self.source_bars.index[-1]} vs old {old_finish}")
+                    log.debug(
+                        f"  - new finish is {self.source_bars.index[-1]} vs old {old_finish}"
+                    )
 
             self._reapply_btalib(start=new_bars.index[0], end=new_bars.index[-1])
 
-            timeout_seconds = SymbolData.get_pause(self.interval)
+            timeout_seconds = SymbolData.get_pause()
             timeout_window = relativedelta(seconds=timeout_seconds)
             new_timeout = datetime.now() + timeout_window
             self.refresh_timeout = new_timeout
@@ -215,8 +228,8 @@ class SymbolData:
         seconds = interval_int * 60
         return seconds
 
-    def get_pause(interval: str) -> int:
-        interval_seconds = SymbolData.get_interval_in_seconds(interval)
+    def get_pause(self) -> int:
+        interval_seconds = SymbolData.get_interval_in_seconds(self.interval)
 
         # get current time
         now = datetime.now()
@@ -231,7 +244,9 @@ class SymbolData:
             pause += 90
         return pause
 
-    def apply_ta(self, ta_function, start: pd.Timestamp = None, end: pd.Timestamp = None):
+    def apply_ta(
+        self, ta_function, start: pd.Timestamp = None, end: pd.Timestamp = None
+    ):
         key_name = str(ta_function)
         # new ta function
         if not str(ta_function) in self.ta_data:
@@ -261,7 +276,8 @@ class SymbolData:
             # can't just use slice because get a weird error about comparing different timezones
             # ta_data_input = self.bars.loc[padding_start:end]
             ta_data_input = self.source_bars.loc[
-                (self.source_bars.index >= padding_start) & (self.source_bars.index <= end)
+                (self.source_bars.index >= padding_start)
+                & (self.source_bars.index <= end)
             ]
 
             ta_data_output = ta_function.do_ta(ta_data_input).df
