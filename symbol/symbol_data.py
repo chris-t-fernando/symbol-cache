@@ -210,7 +210,7 @@ class SymbolData:
 
             self._reapply_btalib(start=new_bars.index[0], end=new_bars.index[-1])
 
-            timeout_seconds = SymbolData.get_pause()
+            timeout_seconds = self.get_pause()
             timeout_window = relativedelta(seconds=timeout_seconds)
             new_timeout = datetime.now() + timeout_window
             self.refresh_timeout = new_timeout
