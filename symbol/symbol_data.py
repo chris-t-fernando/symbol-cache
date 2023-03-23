@@ -38,6 +38,7 @@ class SymbolData:
         @classmethod
         def refresh_bars(cls, decorated):
             def inner(*args, **kwargs):
+                print("refreshing")
                 # if kwargs.get("refresh"):
                 args[0].refresh_cache()
                 return decorated(*args, **kwargs)
@@ -126,7 +127,7 @@ class SymbolData:
         cache_miss = False
         initialising = False
 
-        if not hasattr(self, "bars") or len(self.source_bars) == 0:
+        if not hasattr(self, "_bars") or len(self.source_bars) == 0:
             cache_miss = True
             initialising = True
             log.debug(f"Cache miss - bars len 0")
@@ -322,8 +323,8 @@ class SymbolData:
     def in_bars(self, timestamp: pd.Timestamp):
         return timestamp in self.bars
 
-    @Decorators.refresh_bars
     @property
+    @Decorators.refresh_bars
     def bars(self):
         return self._bars
 
