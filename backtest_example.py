@@ -1,5 +1,10 @@
 from symbol.back_test import BackTestData
+from symbol.symbol import Symbol
 import pandas as pd
+from ta_algos.macd import MacdTA
+
+z = Symbol("BTC-USD")
+z.ohlc.apply_ta(MacdTA)
 
 a = BackTestData(yf_symbol="BTC-USD")
 a.set_period(pd.Timestamp("2022-07-07 12:34:00", tz="UTC"))
