@@ -38,7 +38,6 @@ class SymbolData:
         @classmethod
         def refresh_bars(cls, decorated):
             def inner(*args, **kwargs):
-                print("refreshing")
                 # if kwargs.get("refresh"):
                 args[0].refresh_cache()
                 return decorated(*args, **kwargs)
