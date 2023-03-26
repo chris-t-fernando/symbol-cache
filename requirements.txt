@@ -1,3 +1,4 @@
 bta-lib
 pandas
 numpy
+yfinance
