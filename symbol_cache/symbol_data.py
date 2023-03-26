@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 import yfinance as yf
 import pytz
 import warnings
+from .ta_macd import MacdTA
 
 # from core.ita import ITA
 
@@ -245,13 +246,18 @@ class SymbolData:
         return pause
 
     def apply_ta(
-        self, ta_function, start: pd.Timestamp = None, end: pd.Timestamp = None
+        self, ta_function: str, start: pd.Timestamp = None, end: pd.Timestamp = None
     ):
-        key_name = str(ta_function)
-        # new ta function
-        if not str(ta_function) in self.ta_data:
+        # check if the module for this ta_function is loaded
+        if ta_function not in globals().keys():
+            return
+
+        lib = globals()[ta_function]
+
+        # is ta_function loaded
+        if not ta_function in self.ta_data:
             # register this ta function - so it gets refreshed next time there is a cache miss
-            self.ta_data[key_name] = ta_function.do_ta(self.source_bars).df
+            self.ta_data[ta_function] = lib.do_ta(self.source_bars).df
             self.registered_ta_functions.add(ta_function)
 
         else:
@@ -280,19 +286,19 @@ class SymbolData:
                 & (self.source_bars.index <= end)
             ]
 
-            ta_data_output = ta_function.do_ta(ta_data_input).df
+            ta_data_output = lib.do_ta(ta_data_input).df
 
             # NOT NEEDED - the xor gets rid of this
             # get rid of the padding
             # ta_data_output_trimmed = ta_data_output.loc[start:end]
 
-            dest_df = self.ta_data[key_name]
+            dest_df = self.ta_data[ta_function]
 
-            self.ta_data[key_name] = self.merge_bars(dest_df, ta_data_output)
+            self.ta_data[ta_function] = self.merge_bars(dest_df, ta_data_output)
 
         # self.bars = self.source_bars.join(self.ta_data[key_name])
         # self.bars = self.source_bars.combine_first(self.ta_data[key_name])
-        self.bars = self.bars.combine_first(self.ta_data[key_name])
+        self.bars = self.bars.combine_first(self.ta_data[ta_function])
 
     def _reapply_btalib(self, start: pd.Timestamp = None, end: pd.Timestamp = None):
         if not start:

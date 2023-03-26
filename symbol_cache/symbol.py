@@ -1,5 +1,5 @@
-from symbol_cache.symbol_data import SymbolData
-from symbol_cache.back_test import BackTestData
+from .symbol_data import SymbolData
+from .back_test import BackTestData
 from math import floor, log10
 from decimal import Decimal
 import logging
