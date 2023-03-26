@@ -1,5 +1,5 @@
 import pytest
-from symbol.symbol import Symbol, SymbolData
+from symbol_cache.symbol import Symbol, SymbolData
 
 
 def test_symbol_price():

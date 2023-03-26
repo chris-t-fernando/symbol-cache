@@ -1,7 +1,7 @@
-from symbol.back_test import BackTestData
-from symbol.symbol import Symbol
+from symbol_cache import BackTestData
+from symbol_cache import Symbol
 import pandas as pd
-from ta_algos.macd import MacdTA
+from ta_algos import MacdTA
 
 z = Symbol("BTC-USD")
 z.ohlc.apply_ta(MacdTA)
