@@ -15,6 +15,10 @@ warnings.simplefilter(action="ignore", category=FutureWarning)
 log = logging.getLogger(__name__)
 
 
+class TANotFound(Exception):
+    ...
+
+
 class SymbolAlreadyInCollectionError(Exception):
     ...
 
@@ -250,7 +254,7 @@ class SymbolData:
     ):
         # check if the module for this ta_function is loaded
         if ta_function not in globals().keys():
-            return
+            raise TANotFound(f"Specified TA {ta_function} was not found")
 
         lib = globals()[ta_function]
 
