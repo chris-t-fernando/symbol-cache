@@ -232,6 +232,8 @@ class SymbolData:
         if interval in ["1m", "2m", "5m", "15m", "30m"]:
             return int(interval[:-1])
 
+        if interval == "1d":
+            return 86400
         raise ValueError("I can't be bothered implementing intervals longer than 30m")
 
     def get_interval_in_seconds(interval: str) -> int:

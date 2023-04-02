@@ -4,7 +4,7 @@ from setuptools import find_packages
 
 setup(
     name="symbol_cache",
-    version="0.52",
+    version="0.53",
     description="Stock ohlc data caching",
     author="Chris Fernando",
     author_email="chris.t.fernando@gmail.com",
