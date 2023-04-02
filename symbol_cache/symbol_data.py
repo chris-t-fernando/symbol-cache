@@ -70,7 +70,6 @@ class SymbolData:
             raise SymbolError(error_message)
 
     def get_interval_settings(interval: str) -> tuple:
-        minutes_intervals = ["1m", "2m", "5m", "15m", "30m", "60m", "90m"]
         max_period = {
             "1m": 6,
             "2m": 59,
@@ -79,9 +78,16 @@ class SymbolData:
             "30m": 59,
             "60m": 500,
             "90m": 59,
+            "1d": 400,
         }
+        intervals = list(max_period.keys())
 
-        if interval in minutes_intervals:
+        if interval == "1d":
+            return (
+                relativedelta(days=1),
+                relativedelta(days=max_period[interval]),
+            )
+        elif interval in intervals:
             return (
                 relativedelta(minutes=int(interval[:-1])),
                 relativedelta(days=max_period[interval]),

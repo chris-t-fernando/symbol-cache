@@ -2,3 +2,5 @@ bta-lib
 pandas
 numpy
 yfinance
+ta
+pandas_ta
